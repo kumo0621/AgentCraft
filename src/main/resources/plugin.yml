@@ -1,0 +1,13 @@
+name: AgentCraft
+version: '${project.version}'
+main: com.github.kumo0621.agentcraft.AgentCraft
+api-version: 1.16
+authors: [ kumo0621 ]
+commands:
+  agentcraft:
+    aliases: ac
+    permission: agentcraft
+
+permissions:
+  agentcraft:
+    default: op
