@@ -96,34 +96,42 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
             if (sender instanceof Player) {
                 if (args.length == 0) {
                     sender.sendMessage("引数を指定してください。");
-                } else if (args[0].equals("time")) {
-                    sender.sendMessage("テスト");
-                } else if (args[0].equals("summon")) {
-                    Player player = (Player) sender;
-
-
-                    Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
-                    map.clear();
-                    for (Player onlinePlayer : onlinePlayers) {
-                        Location location = onlinePlayer.getLocation();
-                        Team team = onlinePlayer.getScoreboard().getEntryTeam(onlinePlayer.getName());
-                        if (team != null && !map.containsKey(team)) {
-                            @NotNull ArmorStand entity = location.getWorld().spawn(location, ArmorStand.class);
-                            entity.setGravity(false);
-                            map.put(team, entity);
-                            sender.sendMessage("アーマースタンドを召喚しました。");
-                        } else sender.sendMessage("チームが存在しません");
-
-                    }
-
-                } else if (args[0].equals("start")) {
-                    tick = true;
-                    System.out.println(tick);
-                } else if (args[0].equals("end")) {
-                    tick = false;
-                    System.out.println(tick);
                 } else {
-                    sender.sendMessage("不明なコマンドです。");
+                    switch (args[0]) {
+                        case "time":
+                            sender.sendMessage("テスト");
+                            break;
+                        case "summon":
+                            Player player = (Player) sender;
+
+
+                            Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+                            map.clear();
+                            for (Player onlinePlayer : onlinePlayers) {
+                                Location location = onlinePlayer.getLocation();
+                                Team team = onlinePlayer.getScoreboard().getEntryTeam(onlinePlayer.getName());
+                                if (team != null && !map.containsKey(team)) {
+                                    @NotNull ArmorStand entity = location.getWorld().spawn(location, ArmorStand.class);
+                                    entity.setGravity(false);
+                                    map.put(team, entity);
+                                    sender.sendMessage("アーマースタンドを召喚しました。");
+                                } else sender.sendMessage("チームが存在しません");
+
+                            }
+
+                            break;
+                        case "start":
+                            tick = true;
+                            System.out.println(tick);
+                            break;
+                        case "end":
+                            tick = false;
+                            System.out.println(tick);
+                            break;
+                        default:
+                            sender.sendMessage("不明なコマンドです。");
+                            break;
+                    }
                 }
             }
         }
