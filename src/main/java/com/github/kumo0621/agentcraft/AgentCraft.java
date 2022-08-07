@@ -79,11 +79,11 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                     dir = 270;
                                     break;
                                 case "左":
-                                    dir = 0;
-                                    break;
+                                    loc.setYaw(loc.getYaw() - 90);
+                                    break commndswitch;
                                 case "右":
-                                    dir = 180;
-                                    break;
+                                    loc.setYaw(loc.getYaw() +90);
+                                    break commndswitch;
                                 default:
                                     break commndswitch;
                             }
@@ -92,7 +92,6 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                             double z = Math.sin(Math.toRadians(dir));
                             loc.setX(loc.getX() + x);
                             loc.setZ(loc.getZ() + z);
-
 
                     }
                     entity.teleport(loc);
