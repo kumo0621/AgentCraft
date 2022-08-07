@@ -114,6 +114,10 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
         c = Math.floor(c);
         c = c + 0.5;
         loc.setZ(c);
+
+        double d = loc.getY();
+        d = Math.floor(d);
+        loc.setY(d);
     }
 
 
@@ -145,6 +149,8 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                         adjustPosition(location);
                                         @NotNull ArmorStand entity = location.getWorld().spawn(location, ArmorStand.class);
                                         entity.setGravity(false);
+                                        entity.setSmall(true);
+                                        entity.setArms(true);
                                         map.put(team, entity);
                                         sender.sendMessage("アーマースタンドを召喚しました。");
                                     }
