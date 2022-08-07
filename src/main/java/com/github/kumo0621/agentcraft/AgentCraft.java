@@ -61,11 +61,6 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                 if (entity != null) {
                     Location loc = entity.getLocation();
 
-                    float a;
-                    a = loc.getYaw();
-                    a = (float) Math.floor(a / 90) * 90;
-                    loc.setYaw(a);
-
                     commndswitch:
                     switch (chat) {
                         case "上":
@@ -98,11 +93,28 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                             loc.setX(loc.getX() + x);
                             loc.setZ(loc.getZ() + z);
 
+
                     }
                     entity.teleport(loc);
                 }
             }
         });
+    }
+
+    private void adjustPosition(Location loc) {
+        float a = loc.getYaw();
+        a = (float) Math.floor(a / 90) * 90;
+        loc.setYaw(a);
+
+        double b = loc.getX();
+        b = Math.floor(b);
+        b = b + 0.5;
+        loc.setX(b);
+
+        double c = loc.getZ();
+        c = Math.floor(c);
+        c = c + 0.5;
+        loc.setZ(c);
     }
 
 
@@ -131,6 +143,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                 Team team = onlinePlayer.getScoreboard().getEntryTeam(onlinePlayer.getName());
                                 if (team != null) {
                                     if (!map.containsKey(team)) {
+                                        adjustPosition(location);
                                         @NotNull ArmorStand entity = location.getWorld().spawn(location, ArmorStand.class);
                                         entity.setGravity(false);
                                         map.put(team, entity);
