@@ -11,6 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.util.EulerAngle;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -23,7 +24,10 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(this, this);
         new BukkitRunnable() {
+            int time = 0;
+
             @Override
+
             public void run() {
                 //何かやりたいときはここに書き込む
 
@@ -31,15 +35,33 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
 
 
                     for (ArmorStand entity : map.values()) {
-                        Location loc = entity.getLocation();
-                        loc.setX(loc.getX() + 1);
-                        entity.teleport(loc);
+                        if (time % 2 == 0) {
+                            entity.setLeftLegPose(makeAngle(33f, 0f, 0f));
+                            entity.setRightLegPose(makeAngle(321f, 0f, 0f));
+                            entity.setLeftArmPose(makeAngle(317f, 0f, 0f));
+                            entity.setRightArmPose(makeAngle(26f, 0f, 0f));
+                        } else {
+                            entity.setLeftLegPose(makeAngle(321f, 0f, 0f));
+                            entity.setRightLegPose(makeAngle(33f, 0f, 0f));
+                            entity.setLeftArmPose(makeAngle(26f, 0f, 0f));
+                            entity.setRightArmPose(makeAngle(317f, 0f, 0f));
+                        }
 
 
                     }
+                    time++;
                 }
+
             }
-        }.runTaskTimer(this, 0L, 0L);
+        }.
+
+                runTaskTimer(this, 0L, 0L);
+
+    }
+
+    @NotNull
+    private EulerAngle makeAngle(double x, double y, double z) {
+        return new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z));
     }
 
     @Override
@@ -82,7 +104,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                     loc.setYaw(loc.getYaw() - 90);
                                     break commndswitch;
                                 case "右":
-                                    loc.setYaw(loc.getYaw() +90);
+                                    loc.setYaw(loc.getYaw() + 90);
                                     break commndswitch;
                                 default:
                                     break commndswitch;
