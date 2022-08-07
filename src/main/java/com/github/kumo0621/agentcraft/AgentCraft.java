@@ -32,24 +32,15 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                 //何かやりたいときはここに書き込む
 
                 if (tick) {
-
+                    double angle = Math.sin(Math.toRadians(time));
 
                     for (ArmorStand entity : map.values()) {
-                        if (time % 2 == 0) {
-                            entity.setLeftLegPose(makeAngle(33f, 0f, 0f));
-                            entity.setRightLegPose(makeAngle(321f, 0f, 0f));
-                            entity.setLeftArmPose(makeAngle(317f, 0f, 0f));
-                            entity.setRightArmPose(makeAngle(26f, 0f, 0f));
-                        } else {
-                            entity.setLeftLegPose(makeAngle(321f, 0f, 0f));
-                            entity.setRightLegPose(makeAngle(33f, 0f, 0f));
-                            entity.setLeftArmPose(makeAngle(26f, 0f, 0f));
-                            entity.setRightArmPose(makeAngle(317f, 0f, 0f));
-                        }
-
-
+                        entity.setLeftLegPose(makeAngle(angle * 33f, 0f, 0f));
+                        entity.setRightLegPose(makeAngle(angle * -33, 0f, 0f));
+                        entity.setLeftArmPose(makeAngle(angle * -26, 0f, 0f));
+                        entity.setRightArmPose(makeAngle(angle * 26f, 0f, 0f));
                     }
-                    time++;
+                    time+=10;
                 }
 
             }
