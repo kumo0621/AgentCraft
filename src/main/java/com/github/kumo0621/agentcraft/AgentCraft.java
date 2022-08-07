@@ -60,6 +60,13 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                 System.out.println(chat);
                 if (entity != null) {
                     Location loc = entity.getLocation();
+
+                    float a;
+                    a = loc.getYaw();
+                    a = (float) Math.floor(a / 90) * 90;
+                    loc.setYaw(a);
+
+                    commndswitch:
                     switch (chat) {
                         case "上":
                             loc.setY(loc.getY() + 1);
@@ -67,18 +74,30 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                         case "下":
                             loc.setY(loc.getY() - 1);
                             break;
-                        case "前":
-                            loc.setX(loc.getX() + 1);
-                            break;
-                        case "後ろ":
-                            loc.setX(loc.getX() - 1);
-                            break;
-                        case "右":
-                            loc.setZ(loc.getZ() + 1);
-                            break;
-                        case "左":
-                            loc.setZ(loc.getZ() - 1);
-                            break;
+                        default:
+                            double dir = 0;
+                            switch (chat) {
+                                case "前":
+                                    dir = 90;
+                                    break;
+                                case "後ろ":
+                                    dir = 270;
+                                    break;
+                                case "左":
+                                    dir = 0;
+                                    break;
+                                case "右":
+                                    dir = 180;
+                                    break;
+                                default:
+                                    break commndswitch;
+                            }
+                            dir += loc.getYaw();
+                            double x = Math.cos(Math.toRadians(dir));
+                            double z = Math.sin(Math.toRadians(dir));
+                            loc.setX(loc.getX() + x);
+                            loc.setZ(loc.getZ() + z);
+
                     }
                     entity.teleport(loc);
                 }
@@ -110,12 +129,16 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                             for (Player onlinePlayer : onlinePlayers) {
                                 Location location = onlinePlayer.getLocation();
                                 Team team = onlinePlayer.getScoreboard().getEntryTeam(onlinePlayer.getName());
-                                if (team != null && !map.containsKey(team)) {
-                                    @NotNull ArmorStand entity = location.getWorld().spawn(location, ArmorStand.class);
-                                    entity.setGravity(false);
-                                    map.put(team, entity);
-                                    sender.sendMessage("アーマースタンドを召喚しました。");
-                                } else sender.sendMessage("チームが存在しません");
+                                if (team != null) {
+                                    if (!map.containsKey(team)) {
+                                        @NotNull ArmorStand entity = location.getWorld().spawn(location, ArmorStand.class);
+                                        entity.setGravity(false);
+                                        map.put(team, entity);
+                                        sender.sendMessage("アーマースタンドを召喚しました。");
+                                    }
+                                } else {
+                                    sender.sendMessage("チームが存在しません");
+                                }
 
                             }
 
