@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ビルドなしで実行" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/run/paper-1.16.5-794.jar" />
+    <option name="WORKING_DIRECTORY" value="D:\git\AgentCraft\run" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="corretto-16" />
+    <module name="git" />
+    <method v="2" />
+  </configuration>
+</component>

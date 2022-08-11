@@ -2,6 +2,7 @@ package com.github.kumo0621.agentcraft;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
@@ -62,53 +63,60 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
 
     @EventHandler
     public void onPlayerchat(AsyncPlayerChatEvent e) {
-        Bukkit.getScheduler().runTask(this, new Runnable() {
-            @Override
-            public void run() {
-                Player player = e.getPlayer();
-                Team team = player.getScoreboard().getEntryTeam(player.getName());
-                ArmorStand entity = map.get(team);
-                String chat;
-                chat = e.getMessage();
-                System.out.println(chat);
-                if (entity != null) {
-                    Location loc = entity.getLocation();
+        Bukkit.getScheduler().runTask(this, () -> {
+            Player player = e.getPlayer();
+            Team team = player.getScoreboard().getEntryTeam(player.getName());
+            ArmorStand entity = map.get(team);
+            String chat;
+            chat = e.getMessage();
+            System.out.println(chat);
+            if (entity != null) {
+                Location loc = entity.getLocation();
 
-                    commndswitch:
-                    switch (chat) {
-                        case "上":
-                            loc.setY(loc.getY() + 1);
-                            break;
-                        case "下":
-                            loc.setY(loc.getY() - 1);
-                            break;
-                        default:
-                            double dir = 0;
-                            switch (chat) {
-                                case "前":
-                                    dir = 90;
-                                    break;
-                                case "後ろ":
-                                    dir = 270;
-                                    break;
-                                case "左":
-                                    loc.setYaw(loc.getYaw() - 90);
-                                    break commndswitch;
-                                case "右":
-                                    loc.setYaw(loc.getYaw() + 90);
-                                    break commndswitch;
-                                default:
-                                    break commndswitch;
-                            }
-                            dir += loc.getYaw();
-                            double x = Math.cos(Math.toRadians(dir));
-                            double z = Math.sin(Math.toRadians(dir));
-                            loc.setX(loc.getX() + x);
-                            loc.setZ(loc.getZ() + z);
+                commndswitch:
+                switch (chat) {
+                    case "上":
+                        loc.setY(loc.getY() + 1);
+                        break;
+                    case "下":
+                        loc.setY(loc.getY() - 1);
+                        break;
+                    default:
+                        double dir = 0;
+                        switch (chat) {
+                            case "前":
+                                dir = 90;
+                                break;
+                            case "後ろ":
+                                dir = 270;
+                                break;
+                            case "左":
+                                loc.setYaw(loc.getYaw() - 90);
+                                break commndswitch;
+                            case "右":
+                                loc.setYaw(loc.getYaw() + 90);
+                                break commndswitch;
+                            case "壊す":
+                                Location abc = entity.getLocation().clone();
+                                dir = 90;
+                                dir += abc.getYaw();
+                                double x = Math.cos(Math.toRadians(dir));
+                                double z = Math.sin(Math.toRadians(dir));
+                                abc.setX(abc.getX() + x);
+                                abc.setZ(abc.getZ() + z);
+                                abc.getBlock().setType(Material.AIR);
+                                break commndswitch;
+                            default:
+                                break commndswitch;
+                        }
+                        dir += loc.getYaw();
+                        double x = Math.cos(Math.toRadians(dir));
+                        double z = Math.sin(Math.toRadians(dir));
+                        loc.setX(loc.getX() + x);
+                        loc.setZ(loc.getZ() + z);
 
-                    }
-                    entity.teleport(loc);
                 }
+                entity.teleport(loc);
             }
         });
     }
