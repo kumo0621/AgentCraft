@@ -104,8 +104,10 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                 double z = Math.sin(Math.toRadians(dir));
                                 abc.setX(abc.getX() + x);
                                 abc.setZ(abc.getZ() + z);
-                                abc.getBlock().setType(Material.AIR);
-                                break commndswitch;
+                                if(abc.getBlock().getType().equals(Material.GRASS_BLOCK)) {
+                                    abc.getBlock().setType(Material.AIR);
+                                    break commndswitch;
+                                }
                             default:
                                 break commndswitch;
                         }
