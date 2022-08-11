@@ -41,7 +41,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                         entity.setLeftArmPose(makeAngle(angle * -26, 0f, 0f));
                         entity.setRightArmPose(makeAngle(angle * 26f, 0f, 0f));
                     }
-                    time+=10;
+                    time += 10;
                 }
 
             }
@@ -72,8 +72,6 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
             System.out.println(chat);
             if (entity != null) {
                 Location loc = entity.getLocation();
-
-                commndswitch:
                 switch (chat) {
                     case "上":
                         loc.setY(loc.getY() + 1);
@@ -81,46 +79,44 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                     case "下":
                         loc.setY(loc.getY() - 1);
                         break;
-                    default:
-                        double dir = 0;
-                        switch (chat) {
-                            case "前":
-                                dir = 90;
-                                break;
-                            case "後ろ":
-                                dir = 270;
-                                break;
-                            case "左":
-                                loc.setYaw(loc.getYaw() - 90);
-                                break commndswitch;
-                            case "右":
-                                loc.setYaw(loc.getYaw() + 90);
-                                break commndswitch;
-                            case "壊す":
-                                Location abc = entity.getLocation().clone();
-                                dir = 90;
-                                dir += abc.getYaw();
-                                double x = Math.cos(Math.toRadians(dir));
-                                double z = Math.sin(Math.toRadians(dir));
-                                abc.setX(abc.getX() + x);
-                                abc.setZ(abc.getZ() + z);
-                                if(abc.getBlock().getType().equals(Material.GRASS_BLOCK)) {
-                                    abc.getBlock().setType(Material.AIR);
-                                    break commndswitch;
-                                }
-                            default:
-                                break commndswitch;
+                    case "前":
+                        moveFrontLocation(loc, 90);
+                        break;
+                    case "後ろ":
+                        moveFrontLocation(loc, 270);
+                        break;
+                    case "左":
+                        loc.setYaw(loc.getYaw() - 90);
+                        break;
+                    case "右":
+                        loc.setYaw(loc.getYaw() + 90);
+                        break;
+                    case "壊す":
+                        Location abc = moveFrontLocation(loc.clone(), 90);
+                        if (abc.getBlock().getType().equals(Material.GRASS_BLOCK)) {
+                            abc.getBlock().setType(Material.AIR);
                         }
-                        dir += loc.getYaw();
-                        double x = Math.cos(Math.toRadians(dir));
-                        double z = Math.sin(Math.toRadians(dir));
-                        loc.setX(loc.getX() + x);
-                        loc.setZ(loc.getZ() + z);
+                        break;
+                    default:
+                        break;
+
 
                 }
                 entity.teleport(loc);
             }
         });
+    }
+
+    //関数化でやりたいこと
+    //YAWの角度を与えたら新しい座標が返ってくる関数を用意する。
+    private Location moveFrontLocation(Location loc, double dir) {
+        ;
+        dir += loc.getYaw();
+        double x = Math.cos(Math.toRadians(dir));
+        double z = Math.sin(Math.toRadians(dir));
+        loc.setX(loc.getX() + x);
+        loc.setZ(loc.getZ() + z);
+        return loc;
     }
 
     private void adjustPosition(Location loc) {
