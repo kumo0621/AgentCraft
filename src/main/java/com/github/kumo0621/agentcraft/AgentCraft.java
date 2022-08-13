@@ -1,9 +1,6 @@
 package com.github.kumo0621.agentcraft;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
@@ -111,20 +108,42 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                     case "壊す":
                         Location abc = moveFrontLocation(loc.clone(), 90);
                         if (abc.getBlock().getType().equals(Material.GRASS_BLOCK)) {
-                            Bukkit.getScheduler().runTaskLater(this, () -> {
-                                abc.getBlock().setType(Material.AIR);
-                                abc.getWorld().playSound(abc, Sound.BLOCK_GRASS_BREAK,1,1);
-                            }, 20);
+                            new BukkitRunnable() {
+                                int time = 0;
+
+                                @Override
+                                public void run() {
+                                    //何かやりたいときはここに書き込む
+                                    time++;
+                                    if (time > 20) {
+                                        abc.getBlock().setType(Material.AIR);
+                                        abc.getWorld().playSound(abc, Sound.BLOCK_GRASS_BREAK, 1, 1);
+                                        sendBlockDamage(abc, 0f);
+                                        cancel();
+                                    } else {
+                                        sendBlockDamage(abc, time / 20.f);
+                                    }
+
+                                }
+
+
+                            }.runTaskTimer(this, 0L, 0L);
                         }
                         break;
                     default:
                         break;
 
-
                 }
                 entity.teleport(loc);
             }
         });
+    }
+
+    //ブロックの破壊エフェクト
+    private void sendBlockDamage(Location location, float progress) {
+        for (Player player : location.getNearbyPlayers(30)) {
+            player.sendBlockDamage(location, progress);
+        }
     }
 
     //関数化でやりたいこと
