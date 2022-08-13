@@ -3,6 +3,7 @@ package com.github.kumo0621.agentcraft;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
@@ -110,7 +111,10 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                     case "壊す":
                         Location abc = moveFrontLocation(loc.clone(), 90);
                         if (abc.getBlock().getType().equals(Material.GRASS_BLOCK)) {
-                            abc.getBlock().setType(Material.AIR);
+                            Bukkit.getScheduler().runTaskLater(this, () -> {
+                                abc.getBlock().setType(Material.AIR);
+                                abc.getWorld().playSound(abc, Sound.BLOCK_GRASS_BREAK,1,1);
+                            }, 20);
                         }
                         break;
                     default:
