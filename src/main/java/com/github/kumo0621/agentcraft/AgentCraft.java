@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
 
 public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Listener {
     @Override
@@ -80,7 +81,22 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                         loc.setY(loc.getY() - 1);
                         break;
                     case "前":
-                        moveFrontLocation(loc, 90);
+
+                        Location own = moveFrontLocation(loc.clone(), 90);
+                        if ((own.getBlock().getType().equals(Material.AIR))) {
+                            moveFrontLocation(loc, 90);
+                        } else {
+                            Location previous = loc.clone();
+                            Location vec = own.clone().subtract(previous);
+                            vec.multiply(0.3);
+                            vec.add(previous);
+                            loc.zero().add(vec);
+                            Bukkit.getScheduler().runTaskLater(this, () -> {
+                                entity.teleport(previous);
+
+                            }, 5);
+
+                        }
                         break;
                     case "後ろ":
                         moveFrontLocation(loc, 270);
@@ -176,9 +192,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                 } else {
                                     sender.sendMessage("チームが存在しません");
                                 }
-
                             }
-
                             break;
                         case "start":
                             tick = true;
