@@ -1,12 +1,16 @@
 package com.github.kumo0621.agentcraft;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
@@ -16,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
 
 public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Listener {
     @Override
@@ -97,7 +100,21 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                         }
                         break;
                     case "後ろ":
-                        moveFrontLocation(loc, 270);
+                        Location own2 = moveFrontLocation(loc.clone(), 270);
+                        if ((own2.getBlock().getType().equals(Material.AIR))) {
+                            moveFrontLocation(loc, 270);
+                        } else {
+                            Location previous = loc.clone();
+                            Location vec = own2.clone().subtract(previous);
+                            vec.multiply(0.3);
+                            vec.add(previous);
+                            loc.zero().add(vec);
+                            Bukkit.getScheduler().runTaskLater(this, () -> {
+                                entity.teleport(previous);
+
+                            }, 5);
+
+                        }
                         break;
                     case "左":
                         loc.setYaw(loc.getYaw() - 90);
@@ -115,13 +132,20 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                 public void run() {
                                     //何かやりたいときはここに書き込む
                                     time++;
-                                    if (time > 20) {
+                                    int hand = 0;
+                                    if (time > 200) {
                                         abc.getBlock().setType(Material.AIR);
                                         abc.getWorld().playSound(abc, Sound.BLOCK_GRASS_BREAK, 1, 1);
                                         sendBlockDamage(abc, 0f);
                                         cancel();
                                     } else {
-                                        sendBlockDamage(abc, time / 20.f);
+                                        //壊すとき腕振る処理途中
+                                        sendBlockDamage(abc, time / 200.f);
+                                        double angle = (Math.toRadians(time));
+                                        for (ArmorStand entity : map.values()) {
+                                            entity.setRightArmPose(makeAngle(angle * 100, 0f, 0f));
+                                        }
+                                        time += 10;
                                     }
 
                                 }
@@ -209,6 +233,8 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                         entity.setGravity(false);
                                         entity.setSmall(true);
                                         entity.setArms(true);
+                                        entity.setItemInHand(new ItemStack(Material.DIAMOND_PICKAXE));
+                                        entity.addScoreboardTag(team.getName());
                                         map.put(team, entity);
                                         sender.sendMessage("アーマースタンドを召喚しました。");
                                     }
