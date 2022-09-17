@@ -218,9 +218,6 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                             sender.sendMessage("テスト");
                             break;
                         case "summon":
-                            Player player = (Player) sender;
-
-
                             Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
                             map.clear();
                             for (Player onlinePlayer : onlinePlayers) {
