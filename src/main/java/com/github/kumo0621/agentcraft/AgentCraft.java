@@ -37,11 +37,11 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                 if (tick) {
                     double angle = Math.sin(Math.toRadians(time));
 
-                    for (ArmorStand entity : map.values()) {
-                        entity.setLeftLegPose(makeAngle(angle * 33f, 0f, 0f));
-                        entity.setRightLegPose(makeAngle(angle * -33, 0f, 0f));
-                        entity.setLeftArmPose(makeAngle(angle * -26, 0f, 0f));
-                        entity.setRightArmPose(makeAngle(angle * 26f, 0f, 0f));
+                    for (Agent agent : map.values()) {
+                        agent.armorStand.setLeftLegPose(makeAngle(angle * 33f, 0f, 0f));
+                        agent.armorStand.setRightLegPose(makeAngle(angle * -33, 0f, 0f));
+                        agent.armorStand.setLeftArmPose(makeAngle(angle * -26, 0f, 0f));
+                        agent.armorStand.setRightArmPose(makeAngle(angle * 26f, 0f, 0f));
                     }
                     time += 10;
                 }
@@ -68,12 +68,12 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
         Bukkit.getScheduler().runTask(this, () -> {
             Player player = e.getPlayer();
             Team team = player.getScoreboard().getEntryTeam(player.getName());
-            ArmorStand entity = map.get(team);
+            Agent agent = map.get(team);
             String chat;
             chat = e.getMessage();
             System.out.println(chat);
-            if (entity != null) {
-                Location loc = entity.getLocation();
+            if (agent != null) {
+                Location loc = agent.armorStand.getLocation();
                 switch (chat) {
                     case "上":
                         loc.setY(loc.getY() + 1);
@@ -93,7 +93,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                             vec.add(previous);
                             loc.zero().add(vec);
                             Bukkit.getScheduler().runTaskLater(this, () -> {
-                                entity.teleport(previous);
+                                agent.armorStand.teleport(previous);
 
                             }, 5);
 
@@ -110,7 +110,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                             vec.add(previous);
                             loc.zero().add(vec);
                             Bukkit.getScheduler().runTaskLater(this, () -> {
-                                entity.teleport(previous);
+                                agent.armorStand.teleport(previous);
 
                             }, 5);
 
@@ -142,8 +142,8 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                         //壊すとき腕振る処理途中
                                         sendBlockDamage(abc, time / 200.f);
                                         double angle = (Math.toRadians(time));
-                                        for (ArmorStand entity : map.values()) {
-                                            entity.setRightArmPose(makeAngle(angle * 100, 0f, 0f));
+                                        for (Agent agent : map.values()) {
+                                            agent.armorStand.setRightArmPose(makeAngle(angle * 100, 0f, 0f));
                                         }
                                         time += 10;
                                     }
@@ -158,7 +158,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                         break;
 
                 }
-                entity.teleport(loc);
+                agent.armorStand.teleport(loc);
             }
         });
     }
@@ -204,7 +204,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
 
 
     boolean tick;
-    Map<Team, ArmorStand> map = new HashMap<>();
+    Map<Team, Agent> map = new HashMap<>();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -232,7 +232,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                         entity.setArms(true);
                                         entity.setItemInHand(new ItemStack(Material.DIAMOND_PICKAXE));
                                         entity.addScoreboardTag(team.getName());
-                                        map.put(team, entity);
+                                        map.put(team, new Agent(entity));
                                         sender.sendMessage("アーマースタンドを召喚しました。");
                                     }
                                 } else {
