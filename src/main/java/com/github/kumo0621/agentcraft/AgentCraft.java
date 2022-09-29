@@ -125,27 +125,25 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                     case "壊す":
                         Location abc = moveFrontLocation(loc.clone(), 90);
                         if (abc.getBlock().getType().equals(Material.GRASS_BLOCK)) {
+                            agent.time = 0;
                             new BukkitRunnable() {
-                                int time = 0;
+
 
                                 @Override
                                 public void run() {
                                     //何かやりたいときはここに書き込む
-                                    time++;
-                                    int hand = 0;
-                                    if (time > 200) {
+                                    agent.time++;
+                                    if (agent.time > 200) {
                                         abc.getBlock().setType(Material.AIR);
                                         abc.getWorld().playSound(abc, Sound.BLOCK_GRASS_BREAK, 1, 1);
                                         sendBlockDamage(abc, 0f);
                                         cancel();
                                     } else {
                                         //壊すとき腕振る処理途中
-                                        sendBlockDamage(abc, time / 200.f);
-                                        double angle = (Math.toRadians(time));
-                                        for (Agent agent : map.values()) {
-                                            agent.armorStand.setRightArmPose(makeAngle(angle * 100, 0f, 0f));
-                                        }
-                                        time += 10;
+                                        sendBlockDamage(abc, agent.time / 200.f);
+                                        double angle = (Math.toRadians(agent.time));
+                                        agent.armorStand.setRightArmPose(makeAngle(angle * 100, 0f, 0f));
+                                        agent.time += 10;
                                     }
 
                                 }
