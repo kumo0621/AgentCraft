@@ -47,9 +47,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                 }
 
             }
-        }.
-
-                runTaskTimer(this, 0L, 0L);
+        }.runTaskTimer(this, 0L, 0L);
 
     }
 
