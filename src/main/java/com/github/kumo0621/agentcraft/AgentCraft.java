@@ -122,7 +122,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                         break;
                     case "壊す":
                         Location abc = moveFrontLocation(loc.clone(), 90);
-                        if (abc.getBlock().getType().equals(Material.GRASS_BLOCK)) {
+                        if (abc.getBlock().getType().equals(Material.COBBLESTONE)) {
                             agent.time = 0;
                             new BukkitRunnable() {
 
@@ -133,7 +133,7 @@ public final class AgentCraft extends JavaPlugin implements org.bukkit.event.Lis
                                     agent.time++;
                                     if (agent.time > 200) {
                                         abc.getBlock().setType(Material.AIR);
-                                        abc.getWorld().playSound(abc, Sound.BLOCK_GRASS_BREAK, 1, 1);
+                                        abc.getWorld().playSound(abc, Sound.BLOCK_CORAL_BLOCK_BREAK, 1, 1);
                                         sendBlockDamage(abc, 0f);
                                         cancel();
                                     } else {
